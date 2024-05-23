@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embed Excel Sheet</title>
+    <title>Editable Excel Sheet</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@11.0.0/dist/handsontable.full.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@11.0.0/dist/handsontable.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <style>
+        #excel-container {
+            width: 100%;
+            height: 600px;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
     <div id="excel-container"></div>
@@ -17,9 +26,20 @@
 
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
-            const html = XLSX.utils.sheet_to_html(worksheet);
+            const jsonSheet = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            document.getElementById('excel-container').innerHTML = html;
+            const container = document.getElementById('excel-container');
+            const hot = new Handsontable(container, {
+                data: jsonSheet,
+                rowHeaders: true,
+                colHeaders: true,
+                contextMenu: true,
+                manualRowResize: true,
+                manualColumnResize: true,
+                filters: true,
+                dropdownMenu: true,
+                licenseKey: 'non-commercial-and-evaluation' // for Handsontable usage
+            });
         }
 
         fetchAndRenderExcel();
