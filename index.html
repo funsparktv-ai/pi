@@ -3,9 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal Dream Hyundai</title></title>
+    <title>Embed Excel Sheet</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 </head>
 <body>
-    <iframe src="PROFORMA INVOICE FORMAT RDH.xlsx" width="100%" height="500px"></iframe>
+    <div id="excel-container"></div>
+    <script>
+        async function fetchAndRenderExcel() {
+            const response = await fetch('https://raw.githubusercontent.com/namish2013/pi/main/PROFORMA%20INVOICE%20FORMAT%20RDH.xlsx');
+            const arrayBuffer = await response.arrayBuffer();
+            const data = new Uint8Array(arrayBuffer);
+            const workbook = XLSX.read(data, { type: 'array' });
+
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const html = XLSX.utils.sheet_to_html(worksheet);
+
+            document.getElementById('excel-container').innerHTML = html;
+        }
+
+        fetchAndRenderExcel();
+    </script>
 </body>
 </html>
